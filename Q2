@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    LinkedList() : head(nullptr) {}
+
+    void append(int data) {
+        Node* newNode = new Node(data);
+        if (!head) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+
+    void createCycle(int pos) {
+        if (pos == -1) return;
+        Node* temp = head;
+        Node* cycleNode = nullptr;
+        int index = 0;
+
+        while (temp->next) {
+            if (index == pos) {
+                cycleNode = temp;
+            }
+            temp = temp->next;
+            index++;
+        }
+        temp->next = cycleNode;
+    }
+
+    bool detectCycle() {
+        if (!head || !head->next) return false;
+        
+        Node* slow = head;
+        Node* fast = head;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    LinkedList list;
+
+    list.append(3);
+    list.append(2);
+    list.append(0);
+    list.append(-4);
+
+    int pos = 1;
+    list.createCycle(pos);
+
+    if (list.detectCycle()) {
+        cout << "true" << endl;
+    } else {
+        cout << "false" << endl;
+    }
+
+    return 0;
+}
